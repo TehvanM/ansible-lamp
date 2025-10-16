@@ -1,12 +1,7 @@
 # LAMP Stack Ansible Automation
 
 ## Author
-Jaan Tamm - Student
-
-## Quick Start
-1. Update IP in `inventories/production/hosts`
-2. Run: `ansible-playbook playbooks/site.yml`
-3. Visit: http://your-server-ip
+Tehvan marjapuu
 
 ## File Structure
 eof
