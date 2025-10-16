@@ -1,0 +1,15 @@
+---
+- name: Apply system preparation
+  import_playbook: system.yml
+
+- name: Install and configure Apache
+  import_playbook: apache.yml
+
+- name: Install and configure MySQL
+  import_playbook: mysql.yml
+
+- name: Install and configure PHP
+  import_playbook: php.yml
+
+- name: Final verification and testing
+  import_playbook: verify.yml

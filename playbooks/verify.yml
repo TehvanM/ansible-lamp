@@ -1,0 +1,43 @@
+---
+- name: Verify LAMP stack installation
+  hosts: lamp_servers
+  become: true
+
+  tasks:
+    - name: Check if Apache is running
+      service_facts:
+
+    - name: Verify Apache service status
+      debug:
+        msg: "Apache2 is running"
+      when: ansible_facts.services['apache2.service'].state == 'running'
+
+    - name: Verify MySQL service status
+      debug:
+        msg: "MySQL is running"
+      when: ansible_facts.services['mysql.service'].state == 'running'
+
+    - name: Test web server response
+      uri:
+        url: "http://{{ server_ip }}"
+        status_code: 200
+      register: web_test
+
+    - name: Display web test result
+      debug:
+        msg: "Web server is responding correctly"
+
+    - name: Check PHP version via command line
+      command: php -v
+      register: php_version
+
+    - name: Display PHP version
+      debug:
+        msg: "{{ php_version.stdout }}"
+
+    - name: Final success message
+      debug:
+        msg: |
+          LAMP Stack installation completed successfully!
+          You can access your website at: http://{{ server_ip }}
+          PHP test page: http://{{ server_ip }}/index.php

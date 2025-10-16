@@ -1,0 +1,45 @@
+---
+- name: Prepare the system
+  hosts: lamp_servers
+  become: true
+
+  tasks:
+    - name: Update apt package cache
+      apt:
+        update_cache: yes
+        cache_valid_time: 3600
+
+    - name: Upgrade all packages
+      apt:
+        upgrade: dist
+        force_apt_get: yes
+
+    - name: Install necessary system packages
+      apt:
+        name:
+          - curl
+          - wget
+          - gnupg
+          - software-properties-common
+          - ufw
+          - python3-pip
+        state: present
+
+    - name: Set timezone
+      timezone:
+        name: "{{ system_timezone }}"
+
+    - name: Configure firewall
+      ufw:
+        rule: allow
+        port: "{{ item }}"
+        proto: tcp
+      with_items:
+        - "22"
+        - "80"
+        - "443"
+
+    - name: Enable firewall
+      ufw:
+        state: enabled
+        policy: deny

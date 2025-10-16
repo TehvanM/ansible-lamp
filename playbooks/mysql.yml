@@ -1,0 +1,61 @@
+---
+- name: Install and configure MySQL
+  hosts: lamp_servers
+  become: true
+
+  tasks:
+    - name: Install MySQL Server
+      apt:
+        name: mysql-server
+        state: present
+
+    - name: Install Python MySQL connector
+      apt:
+        name: python3-pymysql
+        state: present
+
+    - name: Ensure MySQL is running and enabled
+      service:
+        name: mysql
+        state: started
+        enabled: true
+
+    - name: Secure MySQL installation
+      mysql_user:
+        login_user: root
+        login_unix_socket: /var/run/mysqld/mysqld.sock
+        user: root
+        password: "{{ mysql_root_password }}"
+        host: localhost
+
+    - name: Remove anonymous MySQL users
+      mysql_user:
+        login_user: root
+        login_password: "{{ mysql_root_password }}"
+        user: ''
+        host: localhost
+        state: absent
+
+    - name: Remove test database
+      mysql_db:
+        login_user: root
+        login_password: "{{ mysql_root_password }}"
+        name: test
+        state: absent
+
+    - name: Create application database
+      mysql_db:
+        login_user: root
+        login_password: "{{ mysql_root_password }}"
+        name: "{{ mysql_database }}"
+        state: present
+
+    - name: Create application database user
+      mysql_user:
+        login_user: root
+        login_password: "{{ mysql_root_password }}"
+        user: "{{ mysql_user }}"
+        password: "{{ mysql_password }}"
+        host: localhost
+        priv: "{{ mysql_database }}.*:ALL"
+        state: present

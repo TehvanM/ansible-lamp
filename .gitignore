@@ -1,0 +1,22 @@
+# Ansible
+*.retry
+.vault_pass
+*.swp
+*.bak
+
+# System
+.DS_Store
+Thumbs.db
+
+# Python
+__pycache__/
+*.pyc
+
+# IDE
+.vscode/
+.idea/
+*.iml
+
+# Logs
+*.log
+ansible.log
